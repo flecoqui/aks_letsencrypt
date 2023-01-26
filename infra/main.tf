@@ -21,14 +21,14 @@ terraform {
 }
 
 locals {
-    subscription_id           = "70920920-49c6-4f47-8259-1a3efb418b01"
-    tenant_id                 = "e3cf3c98-a978-465f-8254-9d541eeea73c"
+    subscription_id           = ""
+    tenant_id                 = ""
     rg_name                   = "testtf"
     location                  = "westus2"
     namespace                 = "demossl"
     ingressClass              = "demo"
     hostname                  = "test-demo-letsencrypt-ssl" # change this to whatver you like. The full url for this hostname with ssl would be https://demo-letsencrypt-ssl.westus2.cloudapp.azure.com
-    ssl_cert_owner_email      = "flecoqui@microsoft.com" # email for let's encrypt to contact
+    ssl_cert_owner_email      = "admin@myorg.com" # email for let's encrypt to contact
 }
 
 provider "azurerm" {
