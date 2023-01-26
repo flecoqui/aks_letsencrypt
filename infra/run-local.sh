@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+export PORT_HTTP=5001
+export APP_VERSION=$(date +"%y%M%d.%H%M%S")
+export AZURE_STORAGE_CONNECTION_STRING=""
+export REFERENCE_IMAGES_STORAGE_CONTAINER=""
+export REALTIME_IMAGES_STORAGE_CONTAINER=""
+export COMPUTER_VISION_ENDPOINT=""
+export COMPUTER_VISION_SUBSCRIPTION_KEY=""
+
+POSTGRESSQL_LOGIN="azureuser"
+POSTGRESQL_ACCOUNT="pg5gpocfnzn"
+POSTGRESSQL_PASSWORD="to be completed"
+POSTGRESSQL_FQDN="pg5gpocfnzn.postgres.database.azure.com"
+POSTGRESSQL_DB="nttdb"
+export DB_STRING="postgresql://${POSTGRESSQL_LOGIN}@${POSTGRESQL_ACCOUNT}:${POSTGRESSQL_PASSWORD}@${POSTGRESSQL_FQDN}:5432/${POSTGRESSQL_DB}"
+
+export VIDEO_INGESTION_URI="http://127.0.0.1:5000/v1"
+export REALTIME_ANALYSIS_URL=""
+export REFERENCE_ANALYSIS_URL=""
+
+
+echo "PORT_HTTP $PORT_HTTP"
+echo "APP_VERSION $APP_VERSION"
+
+
+pip install -r requirements.txt
+echo "Open http://127.0.0.1:${PORT_HTTP}/docs"
+PYTHONPATH=./src uvicorn main:app --reload --port ${PORT_HTTP}

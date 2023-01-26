@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - [FQDN]
+    secretName: tls-secret
+  rules:
+  - host: [FQDN]
+    http:
+      paths:
+      - path: /[SERVICE_NAME](/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: [SERVICE_NAME]
+            port:
+              number: [SERVICE_PORT]
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: [SERVICE_NAME]
+            port:
+              number: [SERVICE_PORT]
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapp-ingress-static
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /static/$2
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - [FQDN]
+    secretName: tls-secret
+  rules:
+  - host: [FQDN]
+    http:
+      paths:
+      - path: /static(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: [SERVICE_NAME]
+            port: 
+              number: [SERVICE_PORT]

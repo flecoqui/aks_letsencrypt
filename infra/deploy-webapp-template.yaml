@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: [SERVICE_NAME]
+  name: [SERVICE_NAME]
+  namespace: [NAME_SPACE]
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: [SERVICE_NAME]
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: [SERVICE_NAME]
+    spec:
+      containers:
+      - name: [SERVICE_NAME]
+        image: [ACR_LOGIN_SERVER]/[SERVICE_IMAGE]
+        imagePullPolicy: Always
+        env:
+        - name: PORT_HTTP
+          value: "[SERVICE_PORT]"
+        - name: DB_STRING
+          value: "[DB_STRING]"
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          value: "[AZURE_STORAGE_CONNECTION_STRING]"
+        - name: REFERENCE_IMAGES_STORAGE_CONTAINER
+          value: "[REFERENCE_IMAGES_STORAGE_CONTAINER]"
+        - name: REALTIME_IMAGES_STORAGE_CONTAINER
+          value: "[REALTIME_IMAGES_STORAGE_CONTAINER]"
+        - name: COMPUTER_VISION_ENDPOINT
+          value: "[COMPUTER_VISION_ENDPOINT]"
+        - name: COMPUTER_VISION_SUBSCRIPTION_KEY
+          value: "[COMPUTER_VISION_SUBSCRIPTION_KEY]"
+        - name: VIDEO_INGESTION_URI
+          value: "[VIDEO_INGESTION_URI]"
+        - name: REALTIME_ANALYSIS_URL
+          value: "[REALTIME_ANALYSIS_URL]"
+        - name: REFERENCE_ANALYSIS_URL
+          value: "[REFERENCE_ANALYSIS_URL]"
+        ports:
+        - containerPort: [SERVICE_PORT]
+          protocol: TCP
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: [SERVICE_NAME]
+  namespace: [NAME_SPACE]
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: [SERVICE_PORT]
+  selector:
+    app: [SERVICE_NAME]
+  sessionAffinity: None
+  type: ClusterIP
