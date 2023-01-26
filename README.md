@@ -2,7 +2,7 @@
 AKS Cluster SSL endpoint with letsencrypt
 
 
-cd infra
-terraform init
-terraform apply
+cd infra  
+terraform init  
+terraform apply  
 
